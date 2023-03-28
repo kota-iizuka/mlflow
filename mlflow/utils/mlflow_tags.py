@@ -58,6 +58,8 @@ MLFLOW_DATABRICKS_GIT_REPO_REFERENCE_TYPE = "mlflow.databricks.gitRepoReferenceT
 MLFLOW_DATABRICKS_GIT_REPO_STATUS = "mlflow.databricks.gitRepoStatus"
 
 MLFLOW_PROJECT_BACKEND = "mlflow.project.backend"
+MLFLOW_PROJECT_DOCKER_ARGS = "mlflow.project.dockerArgs"
+MLFLOW_PROJECT_BUILD_IMAGE = "mlflow.project.buildImage"
 
 # The following legacy tags are deprecated and will be removed by MLflow 1.0.
 LEGACY_MLFLOW_GIT_BRANCH_NAME = "mlflow.gitBranchName"  # Replaced with mlflow.source.git.branch

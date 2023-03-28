@@ -130,6 +130,8 @@ export class RunViewImpl extends Component {
     const sourceVersion = Utils.getSourceVersion(tags);
     const entryPointName = Utils.getEntryPointName(tags);
     const backend = Utils.getBackend(tags);
+    const dockerArgs = Utils.getDockerArgs(tags);
+    const buildImage = Utils.getBuildImage(tags);
 
     if (Utils.getSourceType(tags) === 'PIPELINE') {
       const profileName = Utils.getPipelineProfileName(tags);
@@ -163,6 +165,16 @@ export class RunViewImpl extends Component {
       if (backend) {
         runCommand += ' -b ' + shellEscape(backend);
       }
+      if (dockerArgs) {
+        Object.values(dockerArgs).forEach((arg) => {
+          const newKey = arg.key.substring(Utils.dockerArgsTag.length + 1);
+          runCommand += ' -A ' + shellEscape(newKey + '=' + arg.value)
+        });
+      }
+      if (buildImage) {
+        runCommand += ' --build-image';
+      }
+
       Object.values(params)
         .sort()
         .forEach((p) => {

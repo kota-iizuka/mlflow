@@ -64,6 +64,8 @@ class Utils {
   static gitCommitTag = 'mlflow.source.git.commit';
   static entryPointTag = 'mlflow.project.entryPoint';
   static backendTag = 'mlflow.project.backend';
+  static dockerArgsTag = 'mlflow.project.dockerArgs';
+  static buildImageTag = 'mlflow.project.buildImage';
   static userTag = 'mlflow.user';
   static loggedModelsTag = 'mlflow.log-model.history';
   static pipelineProfileNameTag = 'mlflow.pipeline.profile.name';
@@ -689,6 +691,24 @@ class Utils {
     const backendTag = runTags[Utils.backendTag];
     if (backendTag) {
       return backendTag.value;
+    }
+    return '';
+  }
+
+  static getDockerArgs(runTags) {
+    const dockerArgsTag = {};
+    for (const key in runTags) {
+      if (key.startsWith(Utils.dockerArgsTag)) {
+        dockerArgsTag[key] = runTags[key];
+      }
+    }
+    return dockerArgsTag;
+  }
+
+  static getBuildImage(runTags) {
+    const buildImageTag = runTags[Utils.buildImageTag];
+    if (buildImageTag) {
+      return buildImageTag;
     }
     return '';
   }

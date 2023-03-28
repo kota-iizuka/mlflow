@@ -30,6 +30,8 @@ from mlflow.tracking.fluent import _get_experiment_id
 from mlflow.utils.mlflow_tags import (
     MLFLOW_PROJECT_ENV,
     MLFLOW_PROJECT_BACKEND,
+    MLFLOW_PROJECT_BUILD_IMAGE,
+    MLFLOW_PROJECT_DOCKER_ARGS,
     MLFLOW_RUN_NAME,
     MLFLOW_DOCKER_IMAGE_ID,
 )
@@ -114,6 +116,14 @@ def _run(
             tracking.MlflowClient().set_tag(
                 submitted_run.run_id, MLFLOW_PROJECT_BACKEND, backend_name
             )
+            tracking.MlflowClient().set_tag(
+                submitted_run.run_id, MLFLOW_PROJECT_BUILD_IMAGE, build_image
+            )
+            for docker_arg_key, docker_arg_value in docker_args.items():
+                docker_arg_tag = MLFLOW_PROJECT_DOCKER_ARGS + "." + docker_arg_key
+                tracking.MlflowClient().set_tag(
+                    submitted_run.run_id, docker_arg_tag, docker_arg_value
+                )
             if run_name is not None:
                 tracking.MlflowClient().set_tag(submitted_run.run_id, MLFLOW_RUN_NAME, run_name)
             return submitted_run

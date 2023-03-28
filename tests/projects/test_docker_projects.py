@@ -17,6 +17,8 @@ from mlflow.store.tracking import file_store
 from mlflow.utils.mlflow_tags import (
     MLFLOW_PROJECT_ENV,
     MLFLOW_PROJECT_BACKEND,
+    MLFLOW_PROJECT_DOCKER_ARGS,
+    MLFLOW_PROJECT_BUILD_IMAGE,
     MLFLOW_DOCKER_IMAGE_URI,
     MLFLOW_DOCKER_IMAGE_ID,
 )
@@ -58,6 +60,9 @@ def test_docker_project_execution(
     exact_expected_tags = {
         MLFLOW_PROJECT_ENV: "docker",
         MLFLOW_PROJECT_BACKEND: "local",
+        MLFLOW_PROJECT_BUILD_IMAGE: True,
+        (MLFLOW_PROJECT_DOCKER_ARGS + ".memory"): "1g",
+        (MLFLOW_PROJECT_DOCKER_ARGS + ".privileged"): True,
     }
     approx_expected_tags = {
         MLFLOW_DOCKER_IMAGE_URI: "docker-example",
