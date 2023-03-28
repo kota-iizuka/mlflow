@@ -60,9 +60,9 @@ def test_docker_project_execution(
     exact_expected_tags = {
         MLFLOW_PROJECT_ENV: "docker",
         MLFLOW_PROJECT_BACKEND: "local",
-        MLFLOW_PROJECT_BUILD_IMAGE: True,
+        MLFLOW_PROJECT_BUILD_IMAGE: "True",
         (MLFLOW_PROJECT_DOCKER_ARGS + ".memory"): "1g",
-        (MLFLOW_PROJECT_DOCKER_ARGS + ".privileged"): True,
+        (MLFLOW_PROJECT_DOCKER_ARGS + ".privileged"): "True",
     }
     approx_expected_tags = {
         MLFLOW_DOCKER_IMAGE_URI: "docker-example",
