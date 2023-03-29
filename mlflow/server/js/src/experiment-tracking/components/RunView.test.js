@@ -179,6 +179,81 @@ describe('RunView', () => {
     expect(wrapper.html()).toContain('Job Output');
   });
 
+  test('With docker container environment with buildImage - getRunCommand & metadata list', () => {
+    const store = mockStore({
+      ...minimalStoreRaw,
+      entities: {
+        ...minimalStoreRaw.entities,
+        runInfosByUuid: {
+          ...minimalStoreRaw.entities.runInfosByUuid,
+          'uuid-1234-5678-9012': RunInfo.fromJs({
+            run_uuid: 'uuid-1234-5678-9012',
+            experiment_id: '12345',
+            user_id: 'me@me.com',
+            status: 'RUNNING',
+            start_time: 12345678990,
+            end_time: 12345678999,
+            artifact_uri: 's3://my_bucket/abc/uuid-1234-5678-9012',
+            lifecycle_stage: 'active',
+          }),
+        },
+        tagsByRunUuid: {
+          'uuid-1234-5678-9012': {
+            'mlflow.source.type': RunTag.fromJs({ key: 'mlflow.source.type', value: 'PROJECT' }),
+            'mlflow.source.name': RunTag.fromJs({ key: 'mlflow.source.name', value: 'notebook' }),
+            'mlflow.source.git.commit': RunTag.fromJs({
+              key: 'mlflow.source.git.commit',
+              value: 'abc',
+            }),
+            'mlflow.project.entryPoint': RunTag.fromJs({
+              key: 'mlflow.project.entryPoint',
+              value: 'entry',
+            }),
+            'mlflow.project.backend': RunTag.fromJs({
+              key: 'mlflow.project.backend',
+              value: 'local',
+            }),
+            'mlflow.parentRunId': RunTag.fromJs({
+              key: 'mlflow.parentRunId',
+              value: 'run2-5656-7878-9090',
+            }),
+            'mlflow.project.dockerArgs.gpus': RunTag.fromJs({
+              key: 'mlflow.project.dockerArgs.gpus',
+              value: 'all',
+            }),
+            'mlflow.project.dockerArgs.shm-size': RunTag.fromJs({
+              key: 'mlflow.project.dockerArgs.shm-size',
+              value: '2g',
+            }),
+            'mlflow.project.buildImage': RunTag.fromJs({
+              key: 'mlflow.project.buildImage',
+              value: 'True',
+            })
+          },
+        },
+        paramsByRunUuid: {
+          'uuid-1234-5678-9012': {
+            p1: Param.fromJs({ key: 'p1', value: 'v1' }),
+            p2: Param.fromJs({ key: 'p2', value: 'v2' }),
+          },
+        },
+      },
+    });
+    wrapper = mountWithIntl(
+      <Provider store={store}>
+        <BrowserRouter>
+          <RunView {...minimalProps} />
+        </BrowserRouter>
+      </Provider>,
+    ).find(RunView);
+
+    const instance = wrapper.find(RunViewImpl).instance();
+    expect(instance.getRunCommand()).toEqual(
+      'mlflow run notebook -v abc -e entry -b local -A gpus=all -A shm-size=2g --build-image -P p1=v1 -P p2=v2',
+    );
+  });
+
+
   test('With docker container environment - getRunCommand & metadata list', () => {
     const store = mockStore({
       ...minimalStoreRaw,
@@ -227,7 +302,7 @@ describe('RunView', () => {
             }),
             'mlflow.project.buildImage': RunTag.fromJs({
               key: 'mlflow.project.buildImage',
-              value: true,
+              value: 'False',
             })
           },
         },
@@ -249,7 +324,7 @@ describe('RunView', () => {
 
     const instance = wrapper.find(RunViewImpl).instance();
     expect(instance.getRunCommand()).toEqual(
-      'mlflow run notebook -v abc -e entry -b local -A gpus=all -A shm-size=2g --build-image -P p1=v1 -P p2=v2',
+      'mlflow run notebook -v abc -e entry -b local -A gpus=all -A shm-size=2g -P p1=v1 -P p2=v2',
     );
   });
 

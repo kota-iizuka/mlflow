@@ -708,7 +708,7 @@ class Utils {
   static getBuildImage(runTags) {
     const buildImageTag = runTags[Utils.buildImageTag];
     if (buildImageTag) {
-      return buildImageTag;
+      return buildImageTag.value;
     }
     return '';
   }

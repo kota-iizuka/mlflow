@@ -171,7 +171,7 @@ export class RunViewImpl extends Component {
           runCommand += ' -A ' + shellEscape(newKey + '=' + arg.value)
         });
       }
-      if (buildImage) {
+      if (buildImage && buildImage === 'True') {
         runCommand += ' --build-image';
       }
 
